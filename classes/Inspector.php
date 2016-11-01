@@ -81,12 +81,12 @@ class Inspector {
     public function checkHttpInside() {
 
         if ( ! empty($this->config['timeout']) &&
-            ! empty($this->config['hosts']['http']) &&
-            ! empty($this->config['hosts']['http']['timeout']) &&
-            is_numeric($this->config['hosts']['http']['timeout']) &&
-            $this->config['hosts']['http']['timeout'] > 0
+            ! empty($this->config['host']['http']) &&
+            ! empty($this->config['host']['http']['timeout']) &&
+            is_numeric($this->config['host']['http']['timeout']) &&
+            $this->config['host']['http']['timeout'] > 0
         ) {
-            Curl::setTimeout($this->config['hosts']['http']['timeout']);
+            Curl::setTimeout($this->config['host']['http']['timeout']);
         }
 
         $show_problem_inside = false;
@@ -174,6 +174,7 @@ class Inspector {
 
 
                     if ( ! empty($response_check_decode)) {
+                        $error_count = 0;
                         $errors = array();
 
                         foreach ($response_decode['nodes'] as $key => $node) {
@@ -201,15 +202,18 @@ class Inspector {
                                               ($response_check_decode[$key][0][3] == 404 ||
                                                $response_check_decode[$key][0][3] >= 500))
                                     ) {
+                                        $error_count++;
 
-                                        $error = ! empty($response_check_decode[$key][0][2])
-                                            ? $response_check_decode[$key][0][2]
-                                            : '';
-                                        $error .= ! empty($response_check_decode[$key][0][3])
-                                            ? ' http code:' . $response_check_decode[$key][0][3]
-                                            : '';
+                                        if ($error_count >= 2) {
+                                            $error = !empty($response_check_decode[$key][0][2])
+                                                ? $response_check_decode[$key][0][2]
+                                                : '';
+                                            $error .= !empty($response_check_decode[$key][0][3])
+                                                ? ' http code:' . $response_check_decode[$key][0][3]
+                                                : '';
 
-                                        $errors[] =  $place_name . ' - ' . $error;
+                                            $errors[] = $place_name . ' - ' . $error;
+                                        }
                                     }
                                 }
                             }
