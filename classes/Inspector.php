@@ -80,11 +80,11 @@ class Inspector {
      */
     public function checkHttpInside() {
 
-        if ( ! empty($this->config['timeout']) &&
-            ! empty($this->config['host']['http']) &&
-            ! empty($this->config['host']['http']['timeout']) &&
-            is_numeric($this->config['host']['http']['timeout']) &&
-            $this->config['host']['http']['timeout'] > 0
+        if ( ! empty($this->config['host']) &&
+             ! empty($this->config['host']['http']) &&
+             ! empty($this->config['host']['http']['timeout']) &&
+             is_numeric($this->config['host']['http']['timeout']) &&
+             $this->config['host']['http']['timeout'] > 0
         ) {
             Curl::setTimeout($this->config['host']['http']['timeout']);
         }
@@ -97,7 +97,7 @@ class Inspector {
                 $response = Curl::get($host);
 
                 if (isset($response['error']) ||
-                    !isset($response['info']['http_code']) ||
+                    ! isset($response['info']['http_code']) ||
                     $response['info']['http_code'] == 404 ||
                     $response['info']['http_code'] >= 500
                 ) {
@@ -110,8 +110,8 @@ class Inspector {
                         'error' => $error,
                     );
 
-                    if (!$this->is_silent) {
-                        if (!$show_problem_inside) {
+                    if ( ! $this->is_silent) {
+                        if ( ! $show_problem_inside) {
                             $show_problem_inside = true;
                             echo 'HTTP inside problems' . PHP_EOL;
                             echo '====================' . PHP_EOL;
@@ -131,13 +131,13 @@ class Inspector {
      */
     public function checkHttpOutside() {
 
-        if ( ! empty($this->config['timeout']) &&
-            ! empty($this->config['hosts']['http']) &&
-            ! empty($this->config['hosts']['http']['timeout']) &&
-            is_numeric($this->config['hosts']['http']['timeout']) &&
-            $this->config['hosts']['http']['timeout'] > 0
+        if ( ! empty($this->config['host']) &&
+             ! empty($this->config['host']['http']) &&
+             ! empty($this->config['host']['http']['timeout']) &&
+             is_numeric($this->config['host']['http']['timeout']) &&
+             $this->config['host']['http']['timeout'] > 0
         ) {
-            Curl::setTimeout($this->config['hosts']['http']['timeout']);
+            Curl::setTimeout($this->config['host']['http']['timeout']);
         }
 
         $show_problem_outside = false;
